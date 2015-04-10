@@ -1,10 +1,5 @@
 /**
- ******************************************************************************
- * @file    widget_color_scheme.h
- * @authors mat
- * @date    27 February 2015
- ******************************************************************************
-  Copyright (c) 2015 Brewpi.  All rights reserved.
+  Copyright (c) 2015 Brewpi/Matthew McGowan/Elco Jacobs.  All rights reserved.
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public

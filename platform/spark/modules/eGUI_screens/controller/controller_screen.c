@@ -153,6 +153,6 @@ D4D_DECLARE_STD_SCREEN_BEGIN(screen_controller, ScrController_)
     D4D_DECLARE_SCREEN_OBJECT(scrController_mode)
     D4D_DECLARE_SCREEN_OBJECT(scrController_state)
     D4D_DECLARE_SCREEN_OBJECT(scrController_time)
-
+        
 D4D_DECLARE_SCREEN_END()        
                 
