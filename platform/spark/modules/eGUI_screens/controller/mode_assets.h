@@ -25,18 +25,19 @@
 extern "C" {
 #endif
 
-#include "d4d.h"    
+#include "d4d.h"
+#include <stdint.h>
    
 #define CONTROLLER_MODE_COUNT (5)
 // maximum mode text including 
 #define CONTROLLER_MODE_TEXT_LENGTH (8)
 
-extern const char mode_ids[CONTROLLER_MODE_COUNT];
-
-
-extern const char* mode_names[CONTROLLER_MODE_COUNT];
-extern const D4D_COLOR mode_colors[CONTROLLER_MODE_COUNT];
-
+    typedef struct {
+        D4D_COLOR color;
+        const char* name;
+    } mode_style;
+    
+    uint8_t fetch_mode_style(char mode, mode_style* style);
 
 #ifdef	__cplusplus
 }

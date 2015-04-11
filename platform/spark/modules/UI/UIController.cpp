@@ -20,9 +20,9 @@ void UIController::updateScreen()
 {
     if (!startupComplete)
         return;
-    
-    D4D_SCREEN* currentScreen = D4D_GetActiveScreen();
-    D4D_SCREEN* newScreen = (tempControl.getMode()==MODE_TEST) ? &screen_devicetest : &screen_controller;
+        
+    D4D_SCREEN* currentScreen = D4D_GetBaseScreen();
+    D4D_SCREEN* newScreen = (tempControl.getMode()==MODE_TEST && 0) ? &screen_devicetest : &screen_controller;
     if (currentScreen!=newScreen) {
         D4D_ActivateScreen(newScreen, D4D_TRUE);
     }

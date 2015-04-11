@@ -84,6 +84,14 @@ D4D_SCREEN* D4D_GetActiveScreen(void)
     return d4d_screenHistory[d4d_screenHistoryIndex - 1];
 }
 
+D4D_SCREEN* D4D_GetBaseScreen(void) 
+{
+    if(d4d_screenHistoryIndex <= 0)
+        return NULL;
+
+    return d4d_screenHistory[0];   
+}
+
 /**************************************************************************/ /*!
 * @brief   The function activate the new screen
 * @param   pNewScreen - the pointer to new screen

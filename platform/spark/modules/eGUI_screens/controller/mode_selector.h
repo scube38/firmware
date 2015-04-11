@@ -25,6 +25,9 @@ extern "C" {
 
 #include "d4d.h"
 
+void ScrModeSelector_OnActivate();
+void mode_selection_clicked(D4D_OBJECT* pButton);    
+    
 D4D_EXTERN_OBJECT(scrModeSelector_button1);
 D4D_EXTERN_OBJECT(scrModeSelector_button2);
 D4D_EXTERN_OBJECT(scrModeSelector_button3);

@@ -52,30 +52,59 @@ const D4D_COLOR mode_colors[CONTROLLER_MODE_COUNT] = {
     MODE_TEST_COLOR
 };
 
-
 void show_mode_selector()
 {
     show_mode_selector_(tempControl.getMode());
 }
 
 
-uint8_t mode_index(char mode)
+int8_t mode_index(char mode)
 {
     for (unsigned i=0; i<CONTROLLER_MODE_COUNT; i++) {
         if (mode_ids[i]==mode)
             return i;
     }
-    return 0;
+    return -1;
 }
+
+uint8_t fetch_mode_style(char mode, mode_style* style)
+{
+    int8_t index = mode_index(mode);
+    bool ok = index>=0;
+    if (ok) {
+        style->color = mode_colors[index];
+        style->name = mode_names[index];
+    }
+    return ok;
+}
+
 
 static const D4D_OBJECT* buttons[] = { &scrModeSelector_button1, &scrModeSelector_button2, 
     &scrModeSelector_button3, &scrModeSelector_button4, &scrModeSelector_button5 };
 
 D4D_EXTERN_SCREEN(screen_mode_selector);
 
+uint8_t mode_focus_index;
+
+void mode_selection_clicked(D4D_OBJECT* pButton)
+{
+    int idx = -1;
+    for (int i=0; i<CONTROLLER_MODE_COUNT; i++) {
+        if (pButton==buttons[i])
+            idx = i;
+    }
+    if (idx>=0) {
+        idx += (mode_focus_index+CONTROLLER_MODE_COUNT-3);
+        idx %= CONTROLLER_MODE_COUNT;
+        tempControl.setMode(mode_ids[idx], false);
+        D4D_EscapeScreen();
+    }
+}
+
 void show_mode_selector_(char mode)
 {
     uint8_t index = mode_index(mode);
+    mode_focus_index = index;
     index += (CONTROLLER_MODE_COUNT-3);
     index %= CONTROLLER_MODE_COUNT;
     
@@ -84,14 +113,9 @@ void show_mode_selector_(char mode)
     {
         ControllerModeView view(buttons[i]);
         ControllerModePresenter pres(view);
-        pres.update(index);        
+        pres.update(mode_ids[index]);
         index = (index+1) % CONTROLLER_MODE_COUNT;
     }
         
     D4D_ActivateScreen((D4D_SCREEN*)&screen_mode_selector, 0);
-}
-
-void ScrModeSelector_Activate()
-{
-    
 }

@@ -16,11 +16,11 @@
  ******************************************************************************
  */
 
-#if 0
 #include "d4d.h"
 
 #include "controller_screen_layout.h"
 #include "mode_assets.h"
+#include "mode_selector.h"
 #include "../fonts.h"
 #include "../brewpi_colors.h"
 #include "../widget_color_scheme.h"
@@ -29,7 +29,7 @@
 
 #define DECLARE_MODE_BUTTON(x) \
     char mode_button##x[CONTROLLER_MODE_TEXT_LENGTH] = ""; \
-    D4D_DECLARE_COLOR_LABEL(scrModeSelector_button##x, mode_button##x, COL2_X, ROWMODE_Y, COL2_CX, ROWMODE_CY, FONT_REGULAR, D4D_NO_CONST, INITIAL_BLOCK_COLOR, REGULAR_TEXT_COLOR)
+    D4D_DECLARE_COLOR_BUTTON(scrModeSelector_button##x, mode_button##x, 0, ROWMODE_Y+(ROWMODE_CY*(x-4)), COL2_CX, ROWMODE_CY, FONT_REGULAR, D4D_CONST, INITIAL_BLOCK_COLOR, REGULAR_TEXT_COLOR, mode_selection_clicked)
 
 
 DECLARE_MODE_BUTTON(1);
@@ -46,5 +46,28 @@ D4D_DECLARE_SCREEN_BEGIN(screen_mode_selector, ScrModeSelector_, COL2_X, 0, COL2
     D4D_DECLARE_SCREEN_OBJECT(scrModeSelector_button5)    
 D4D_DECLARE_SCREEN_END()        
     
+void ScrModeSelector_OnInit()
+{
+    
+}
 
-#endif
+void ScrModeSelector_OnMain()
+{
+    
+}
+
+void ScrModeSelector_OnActivate()
+{
+    
+}
+
+void ScrModeSelector_OnDeactivate()
+{
+    
+}
+
+Byte ScrModeSelector_OnObjectMsg(D4D_MESSAGE* pMsg)
+{
+    D4D_UNUSED(pMsg);
+    return 0;
+}

@@ -166,16 +166,6 @@ class ControllerModePresenter
 {
     ControllerModeView& view_;
     
-    uint8_t modeToIndex(control_mode_t mode) 
-    {
-        for (unsigned int i=0; i<CONTROLLER_MODE_COUNT; i++) 
-        {
-            if (mode_ids[i]==mode)
-                return i;
-        }        
-        return 3;   // OFF
-    }
-    
 public:
 
     ControllerModePresenter(ControllerModeView& view)
@@ -183,13 +173,13 @@ public:
             
     void update(control_mode_t mode)
     {
-        update(modeToIndex(mode));
+        mode_style style;
+        if (fetch_mode_style(mode, &style)) {
+            view_.update(style.name, style.color);
+        }
+        
     }
-    
-    void update_index(uint8_t index)
-    {
-        view_.update(mode_names[index], mode_colors[index]);
-    }
+        
 };
 
 

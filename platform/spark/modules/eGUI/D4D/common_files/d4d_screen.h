@@ -359,6 +359,7 @@ typedef struct D4D_SCREEN_S
 #endif
 
 D4D_SCREEN* D4D_GetActiveScreen(void);
+D4D_SCREEN* D4D_GetBaseScreen(void);
 void D4D_ActivateScreen(D4D_SCREEN* pNewScreen, D4D_BOOL bReplaceCurrent);
 void D4D_EscapeScreen(void);
 void D4D_EscapeToBaseScreen(void);
