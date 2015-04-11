@@ -65,7 +65,8 @@ uint32_t UI::showStartupPage()
         calibrateTouchScreen();
     }
     
-    uiController.beginStartup();    
+    //uiController.beginStartup();    
+    uiController.notifyStartupComplete();
     return 0;
 }
 

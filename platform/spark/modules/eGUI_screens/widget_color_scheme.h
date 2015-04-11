@@ -51,8 +51,11 @@ typedef struct WIDGET_COLOR_SCHEME {
  */
 #define D4D_DECLARE_COLOR_LABEL(name, text, x, y, cx, cy, font, type, bg, fg) \
     WIDGET_COLOR_SCHEME name##_color = { bg, bg, bg, bg, fg, fg, fg, fg }; \
-    D4D_DECLARE_LABEL(name, text, x, y, cx, cy, D4D_LBL_F_DEFAULT, AS_D4D_COLOR_SCHEME(&name##_color), font, NULL, NULL);
+    D4D_DECLARE_LABEL(name, text, x, y, cx, cy, D4D_LBL_F_DEFAULT, AS_D4D_COLOR_SCHEME(&name##_color), font, NULL, NULL)
 
+#define D4D_DECLARE_COLOR_BUTTON(name, text, x, y, cx, cy, font, type, bg, fg, click) \
+    WIDGET_COLOR_SCHEME name##_color = { bg, bg, bg, bg, fg, fg, fg, fg }; \
+    D4D_DECLARE_BUTTON(name, text, x, y, cx, cy, D4D_LBL_F_DEFAULT, NULL, NULL, AS_D4D_COLOR_SCHEME(&name##_color), font, NULL, click, NULL)
 
 
 #endif	/* WIDGET_COLOR_SCHEME_H */

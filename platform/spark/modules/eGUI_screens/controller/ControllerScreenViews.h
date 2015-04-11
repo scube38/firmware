@@ -31,6 +31,7 @@ extern "C" {
 #include "controller_screen.h"
 #include "TempControl.h"
 #include "TemperatureFormats.h"
+#include "mode_assets.h"
 
 bool set_background_color(const D4D_OBJECT* pThis, D4D_COLOR bg);
 
@@ -165,26 +166,14 @@ class ControllerModePresenter
 {
     ControllerModeView& view_;
     
-    static const char modes[5];
-    static const char* names[5];
-    static D4D_COLOR colors[5];
-    
-    unsigned modeToIndex(control_mode_t mode) 
+    uint8_t modeToIndex(control_mode_t mode) 
     {
-        for (unsigned int i=0; i<arraySize(modes); i++) 
+        for (unsigned int i=0; i<CONTROLLER_MODE_COUNT; i++) 
         {
-            if (modes[i]==mode)
+            if (mode_ids[i]==mode)
                 return i;
         }        
         return 3;   // OFF
-    }
-    
-    const char* nameForMode(control_mode_t mode) {
-        return names[modeToIndex(mode)];
-    }
-    
-    D4D_COLOR colorForMode(control_mode_t mode) {
-        return colors[modeToIndex(mode)];
     }
     
 public:
@@ -194,7 +183,12 @@ public:
             
     void update(control_mode_t mode)
     {
-        view_.update(nameForMode(mode), colorForMode(mode));
+        update(modeToIndex(mode));
+    }
+    
+    void update_index(uint8_t index)
+    {
+        view_.update(mode_names[index], mode_colors[index]);
     }
 };
 
@@ -272,30 +266,6 @@ public:
     }
 };
 
-
-const char ControllerModePresenter::modes[5] = {
-    MODE_FRIDGE_CONSTANT,
-    MODE_BEER_CONSTANT,
-    MODE_BEER_PROFILE,
-    MODE_OFF,
-    MODE_TEST    
-};
-
-const char* ControllerModePresenter::names[5] = {
-    "FRIDGE",
-    "BEER",
-    "PROFILE",
-    "OFF",
-    "TEST"
-};
-
-D4D_COLOR ControllerModePresenter::colors[5] = {
-    MODE_FRIDGE_COLOR,
-    MODE_BEER_COLOR,
-    MODE_PROFILE_COLOR,
-    MODE_OFF_COLOR,
-    MODE_TEST_COLOR
-};
 
 #endif	/* CONTROLLERSCREENVIEWS_H */
 
