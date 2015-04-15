@@ -142,7 +142,7 @@ static unsigned char D4DLCDHW_Init_Spi_Spark_8b(void) {
     // Serial clock cycle is min 150ns from ILI93841 datasheet, which equals 6.7 MHz
     // But touch screen driver (XPT2046) needs 200ns low, 200ns high.
     // 1 /( 72 MHz / 29) = 403 ns. Prescaler of 32 gives a bit of margin.
-    SPI.setClockDivider(32);
+    SPI.setClockDivider(SPI_CLOCK_DIV4);
 
     SPI.setBitOrder(MSBFIRST);
     SPI.setDataMode(SPI_MODE0);
@@ -186,8 +186,20 @@ static unsigned char D4DLCDHW_DeInit_Spi_Spark_8b(void) {
 static void D4DLCDHW_SendDataWord_Spi_Spark_8b(unsigned short value) {
     D4DLCD_ASSERT_CS;
     // Send data byte
-    SPI.transfer(value);
+    // SPI.transfer(value);
+    // Below is a copy of SPI.transfer(), but without receiving data
+    
+    /* Wait for SPI1 Tx buffer empty */
+    while (SPI_I2S_GetFlagStatus(SPI1, SPI_I2S_FLAG_TXE) == RESET);
+    /* Send SPI1 data */
+    SPI_I2S_SendData(SPI1, value);
 
+   /* Wait for SPI1 data reception */
+    while (SPI_I2S_GetFlagStatus(SPI1, SPI_I2S_FLAG_RXNE) == RESET);
+
+    // Do not actually receive any data
+    //   SPI_I2S_ReceiveData(SPI1);
+  
     D4DLCD_DEASSERT_CS;
 }
 

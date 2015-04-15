@@ -111,6 +111,9 @@ void brewpiLoop(void)
     piLink.receive();
 
 }
+//extern "C"{
+//#include "d4d.h"
+//}
 
 void loop() {
     #if BREWPI_SIMULATE
@@ -118,5 +121,9 @@ void loop() {
     #else
     brewpiLoop();
     #endif
+
+//    D4D_ClearScreen(0x0A0A);
+//    D4D_ClearScreen(0xF5F5);
+
 }
 
