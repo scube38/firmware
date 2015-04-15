@@ -154,6 +154,9 @@ typedef struct D4DLCD_FUNCTIONS_S
   void (*D4DLCD_FlushBuffer)(D4DLCD_FLUSH_MODE mode);   ///< The LCD driver flush function.
   void (*D4DLCD_Delay_ms)(unsigned short period);       ///< The LCD driver delay function.
   unsigned char (*D4DLCD_DeInit)(void);                 ///< The LCD driver deinicialization function
+  void (*D4DLCD_BulkStartTransfer)(void);               ///< Start a bulk transfer
+  void (*D4DLCD_BulkSendPixelColor)(D4D_COLOR value);   ///< Send pixel as part of a bulk transfer
+  void (*D4DLCD_BulkEndTransfer)(void);                 ///< End a bulk transfer  
 }D4DLCD_FUNCTIONS;
 
 
@@ -170,6 +173,8 @@ typedef struct D4DLCDHW_FUNCTIONS_S
   unsigned char (*D4DLCDHW_PinCtl)(D4DLCDHW_PINS pinId, D4DHW_PIN_STATE setState);      ///< The LCD HW interface driver control HW pins function
   void (*D4DLCDHW_FlushBuffer)(D4DLCD_FLUSH_MODE mode);         ///< The LCD HW interface driver flush data function
   unsigned char (*D4DLCDHW_DeInit)(void);       ///< The LCD HW interface driver deinicialization function
+  void (*D4DLCDHW_StartTransfer)(void);         ///< Function to be called before a multi-byte SPI transfer 
+  void (*D4DLCDHW_EndTransfer)(void);           ///< Function to be called after a multi-byte SPI transfer
 }D4DLCDHW_FUNCTIONS;
 
 

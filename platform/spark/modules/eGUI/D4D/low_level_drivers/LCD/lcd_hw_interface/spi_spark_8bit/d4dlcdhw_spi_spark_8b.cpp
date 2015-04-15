@@ -82,6 +82,9 @@ static unsigned short D4DLCDHW_ReadCmdWord_Spi_Spark_8b(void);
 static unsigned char D4DLCDHW_PinCtl_Spi_Spark_8b(D4DLCDHW_PINS pinId, D4DHW_PIN_STATE setState);
 static void D4DLCD_FlushBuffer_Spi_Spark_8b(D4DLCD_FLUSH_MODE mode);
 static void D4DLCDHW_Delay_Spi_Spark_8b(unsigned short period);
+static void D4DLCDHW_StartTransfer_Spark_8b(void);
+static void D4DLCDHW_EndTransfer_Spark_8b(void);
+static void D4DLCDHW_BulkSendDataWord_Spi_Spark_8b(unsigned short value);
 
 
 /**************************************************************//*!
@@ -102,6 +105,8 @@ extern "C" const D4DLCDHW_FUNCTIONS d4dlcdhw_spi_spark_8b ={
     D4DLCDHW_PinCtl_Spi_Spark_8b,
     D4DLCD_FlushBuffer_Spi_Spark_8b,
     D4DLCDHW_DeInit_Spi_Spark_8b,
+    D4DLCDHW_StartTransfer_Spark_8b,
+    D4DLCDHW_EndTransfer_Spark_8b
 };
 /**************************************************************//*!
   *
@@ -142,7 +147,7 @@ static unsigned char D4DLCDHW_Init_Spi_Spark_8b(void) {
     // Serial clock cycle is min 150ns from ILI93841 datasheet, which equals 6.7 MHz
     // But touch screen driver (XPT2046) needs 200ns low, 200ns high.
     // 1 /( 72 MHz / 29) = 403 ns. Prescaler of 32 gives a bit of margin.
-    SPI.setClockDivider(SPI_CLOCK_DIV4);
+    SPI.setClockDivider(SPI_CLOCK_DIV32);
 
     SPI.setBitOrder(MSBFIRST);
     SPI.setDataMode(SPI_MODE0);
@@ -185,6 +190,23 @@ static unsigned char D4DLCDHW_DeInit_Spi_Spark_8b(void) {
 
 static void D4DLCDHW_SendDataWord_Spi_Spark_8b(unsigned short value) {
     D4DLCD_ASSERT_CS;
+    D4DLCDHW_BulkSendDataWord_Spi_Spark_8b(value);
+    D4DLCD_DEASSERT_CS;
+}
+
+
+//-----------------------------------------------------------------------------
+// FUNCTION:    D4DLCDHW_BulkSendDataWord_Spi_Spark_8b
+// SCOPE:       Low Level Driver API function
+// DESCRIPTION: Send data word without asserting CS
+//
+// PARAMETERS:  unsigned short value    variable to send
+//
+// RETURNS:     none
+//-----------------------------------------------------------------------------
+
+static void D4DLCDHW_BulkSendDataWord_Spi_Spark_8b(unsigned short value) {
+//    D4DLCD_ASSERT_CS;
     // Send data byte
     // SPI.transfer(value);
     // Below is a copy of SPI.transfer(), but without receiving data
@@ -199,8 +221,7 @@ static void D4DLCDHW_SendDataWord_Spi_Spark_8b(unsigned short value) {
 
     // Do not actually receive any data
     //   SPI_I2S_ReceiveData(SPI1);
-  
-    D4DLCD_DEASSERT_CS;
+//    D4DLCD_DEASSERT_CS;
 }
 
 //-----------------------------------------------------------------------------
@@ -349,6 +370,34 @@ static void D4DLCDHW_Delay_Spi_Spark_8b(unsigned short period){
     delay(period);
 }
 
+//-----------------------------------------------------------------------------
+// FUNCTION:    D4DLCDHW_StartTransfer_Spark_8b
+// SCOPE:       Low Level Driver API function
+// DESCRIPTION: Set up a (multi-byte) transfer (configure SPI speed, DMA)
+//
+// PARAMETERS:  none
+//
+// RETURNS:     none
+//-----------------------------------------------------------------------------
+static void D4DLCDHW_StartTransfer_Spark_8b(void){
+    SPI.setClockDivider(SPI_CLOCK_DIV4);
+    D4DLCD_ASSERT_CS
+}
 
+//-----------------------------------------------------------------------------
+// FUNCTION:    D4DLCDHW_EndTransfer_Spark_8b
+// SCOPE:       Low Level Driver API function
+// DESCRIPTION: End a (multi-byte) transfer (configure SPI, DMA)
+//
+// PARAMETERS:  none
+//
+// RETURNS:     none
+//-----------------------------------------------------------------------------
+static void D4DLCDHW_EndTransfer_Spark_8b(void){
+    SPI.setClockDivider(SPI_CLOCK_DIV32);
+    D4DLCD_DEASSERT_CS
+}
 
 #endif //(D4D_MK_STR(D4D_LLD_LCD_HW) == d4dlcdhw_spi_8b_ID)
+
+

@@ -230,12 +230,16 @@ void D4D_LCD_Box(D4D_COOR x1, D4D_COOR y1, D4D_COOR x2, D4D_COOR y2, D4D_COLOR c
   // Count the pixel count
   i_max = (LWord)((LWord)(x2-x1+1)*(LWord)(y2-y1+1));
 
+  D4D_LLD_LCD.D4DLCD_BulkStartTransfer();
   // send all pixels into LCD
-  for (i=0; i < i_max ; ++i)
-    D4D_LLD_LCD.D4DLCD_Send_PixelColor(color);
+  for (i=0; i < i_max ; ++i){
+    D4D_LLD_LCD.D4DLCD_BulkSendPixelColor(color);
+  }
+  D4D_LLD_LCD.D4DLCD_BulkStartTransfer();
 #if D4D_LLD_FLUSH_ELEMENT != D4D_FALSE
   D4D_LLD_LCD.D4DLCD_FlushBuffer(D4DLCD_FLSH_ELEMENT);
 #endif
+  
 }
 
 void D4D_LCD_Rect(D4D_COOR x1, D4D_COOR y1, D4D_COOR x2, D4D_COOR y2, D4D_LINETYPE line_type, D4D_COLOR color)   //draw rectangle

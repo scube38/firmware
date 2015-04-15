@@ -89,6 +89,9 @@ static D4D_COLOR D4DLCD_Read_PixelColor_ili9341(void);
 static void D4DLCD_Flush_ili9341(D4DLCD_FLUSH_MODE mode);
 static void D4DLCD_Delay_ms_ili9341(unsigned short period);
 static unsigned char D4DLCD_DeInit_ili9341(void);
+static void D4DLCD_BulkStartTransfer_ili9341(void);   
+static void D4DLCD_BulkEndTransfer_ili9341(void);    
+static void D4DLCD_BulkSendPixelColor_ili9341(D4D_COLOR value);
 
 /**************************************************************//*!
   *
@@ -115,6 +118,9 @@ const D4DLCD_FUNCTIONS d4dlcd_ili9341 = {
     D4DLCD_Flush_ili9341, ///< The pointer to driver flush written pixels to LCD function
     D4DLCD_Delay_ms_ili9341, ///< The pointer to driver delay function
     D4DLCD_DeInit_ili9341, ///< The pointer to driver deinitialization function
+    D4DLCD_BulkStartTransfer_ili9341,   ///< The pointer to start bulk transfer function
+    D4DLCD_BulkSendPixelColor_ili9341,   ///< The pointer to bulk transfer one pixel function
+    D4DLCD_BulkEndTransfer_ili9341   ///< The pointer to end bulk transfer function
 };
 /*! @} End of doxd4d_lcd_variable                                           */
 /**************************************************************//*!
@@ -345,6 +351,7 @@ static unsigned char D4DLCD_SetOrientation_ili9341(D4DLCD_ORIENTATION new_orient
   *******************************************************************************/
 
 static void D4DLCD_Send_PixelColor_ili9341(D4D_COLOR value) {
+//    D4DLCD_BulkStartTransfer_ili9341();
 #ifdef D4D_COLOR_TRANSPARENT
     if (value == D4D_COLOR_TRANSPARENT)
         D4D_LLD_LCD_HW.D4DLCDHW_ReadDataWord();
@@ -359,6 +366,7 @@ static void D4DLCD_Send_PixelColor_ili9341(D4D_COLOR value) {
         D4D_LLD_LCD_HW.D4DLCDHW_SendDataWord(value & 0xff);
 #endif
     }
+//    D4DLCD_BulkEndTransfer_ili9341();
 }
 
 /**************************************************************************/ /*!
@@ -407,6 +415,33 @@ static void D4DLCD_Flush_ili9341(D4DLCD_FLUSH_MODE mode) {
 
 static void D4DLCD_Delay_ms_ili9341(unsigned short period) {
     D4DLCD_Delay_ms_Common(period);
+}
+
+
+static void D4DLCD_BulkStartTransfer_ili9341(void){
+    D4D_LLD_LCD_HW.D4DLCDHW_StartTransfer();
+}
+
+static void D4DLCD_BulkEndTransfer_ili9341(void){
+    D4D_LLD_LCD_HW.D4DLCDHW_EndTransfer();
+}
+
+    
+static void D4DLCD_BulkSendPixelColor_ili9341(D4D_COLOR value){
+#ifdef D4D_COLOR_TRANSPARENT
+    if (value == D4D_COLOR_TRANSPARENT)
+        D4D_LLD_LCD_HW.D4DLCDHW_ReadDataWord();
+    else
+#endif
+    {
+#if D4D_COLOR_SYSTEM != D4D_COLOR_SYSTEM_RGB565
+        Word color = D4D_COLOR_RGB565(D4D_COLOR_GET_R(value), D4D_COLOR_GET_G(value), D4D_COLOR_GET_B(value));
+        D4D_LLD_LCD_HW.D4DLCDHW_SendDataWord(color);
+#else
+        D4D_LLD_LCD_HW.D4DLCDHW_SendDataWord(value >> 8);
+        D4D_LLD_LCD_HW.D4DLCDHW_SendDataWord(value & 0xff);
+#endif
+    }
 }
 
 /*! @} End of doxd4d_lcd_func                                           */
