@@ -89,6 +89,11 @@ uint8_t EepromManager::saveDefaultDevices()
 
 bool EepromManager::applySettings()
 {	
+    uint8_t version = eepromAccess.readByte(pointerOffset(version));
+    if (version==0xFF)      // un-initialized
+        initializeEeprom();
+        
+    
 	if (!hasSettings())
 		return false;
 
