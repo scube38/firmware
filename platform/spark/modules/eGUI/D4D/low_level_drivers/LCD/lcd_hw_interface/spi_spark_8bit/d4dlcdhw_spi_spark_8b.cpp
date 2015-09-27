@@ -148,13 +148,13 @@ static unsigned char D4DLCDHW_Init_Spi_Spark_8b(void) {
     SPI_CLOCK_DIV64
 #else
 #error Unknown platform
-#endif    
+#endif
     );
 
 
     SPI.setBitOrder(MSBFIRST);
     SPI.setDataMode(SPI_MODE0);
-    
+
     SPI.begin(D4DLCD_CS);
 
     D4DLCD_DEASSERT_RESET;
